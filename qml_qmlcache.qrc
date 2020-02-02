@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<RCC>
+    <qresource prefix="/">
+        <file alias="images/background.png">images/background.png</file>
+        <file alias="images/dropdown.png">images/dropdown.png</file>
+        <file alias="images/dropdownBlue.jpg">images/dropdownBlue.jpg</file>
+        <file alias="images/dropdownBlue.png">images/dropdownBlue.png</file>
+        <file alias="images/iconfinder_ic_send_48px_352094.png">images/iconfinder_ic_send_48px_352094.png</file>
+        <file alias="images/logo.png">images/logo.png</file>
+        <file alias="images/message.png">images/message.png</file>
+        <file alias="images/options.png">images/options.png</file>
+        <file alias="images/passwordIco.png">images/passwordIco.png</file>
+        <file alias="images/passwordIco_Light.png">images/passwordIco_Light.png</file>
+        <file alias="images/pick.png">images/pick.png</file>
+        <file alias="images/pick_.png">images/pick_.png</file>
+        <file alias="images/prepod_meme.jpg">images/prepod_meme.jpg</file>
+        <file alias="images/prepod1.jpg">images/prepod1.jpg</file>
+        <file alias="images/prepod2.jpg">images/prepod2.jpg</file>
+        <file alias="images/profile.jpg">images/profile.jpg</file>
+        <file alias="images/Profile.png">images/Profile.png</file>
+        <file alias="images/Profile_Light.png">images/Profile_Light.png</file>
+        <file alias="images/remove.png">images/remove.png</file>
+        <file alias="images/send.png">images/send.png</file>
+        <file alias="images/send48.png">images/send48.png</file>
+        <file alias="images/student1.jpg">images/student1.jpg</file>
+        <file alias="images/student2.jpg">images/student2.jpg</file>
+        <file alias="images/timetable.png">images/timetable.png</file>
+        <file alias="images/update.png">images/update.png</file>
+    </qresource>
+</RCC>

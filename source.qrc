@@ -1,0 +1,43 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/background.png</file>
+        <file>images/dropdownBlue.png</file>
+        <file>images/logo.png</file>
+        <file>images/pick.png</file>
+        <file>images/pick_.png</file>
+        <file>images/prepod1.jpg</file>
+        <file>images/prepod2.jpg</file>
+        <file>images/student1.jpg</file>
+        <file>images/student2.jpg</file>
+        <file>images/top.png</file>
+        <file>images/bottom.png</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>images/profile.jpg</file>
+        <file>images/logo.ico</file>
+        <file>images/timetable.svg</file>
+        <file>images/add.svg</file>
+        <file>images/busy.svg</file>
+        <file>images/edit.svg</file>
+        <file>images/messages.svg</file>
+        <file>images/no_internet.svg</file>
+        <file>images/options.svg</file>
+        <file>images/profile.svg</file>
+        <file>images/remove.svg</file>
+        <file>images/selected.svg</file>
+        <file>images/send.svg</file>
+        <file>images/stickers.svg</file>
+        <file>images/subject.svg</file>
+        <file>images/work.svg</file>
+        <file>images/more.svg</file>
+        <file>images/maximize.svg</file>
+        <file>images/maximize2.svg</file>
+        <file>images/windowed.svg</file>
+        <file>images/minimize.svg</file>
+        <file>images/back.svg</file>
+        <file>images/admin.svg</file>
+        <file>images/adduser.svg</file>
+        <file>images/users.svg</file>
+        <file>images/left.svg</file>
+        <file>images/right.svg</file>
+    </qresource>
+</RCC>

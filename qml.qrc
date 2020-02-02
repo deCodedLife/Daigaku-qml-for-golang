@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sources/core.js</file>
+        <file>main.qml</file>
+        <file>LoginPage.qml</file>
+        <file>MainWindow.qml</file>
+        <file>MessagesDialog.qml</file>
+        <file>LeftPanelButtons.qml</file>
+        <file>TimeTable.qml</file>
+        <file>TableItem.qml</file>
+        <file>ImageViewer.qml</file>
+        <file>MessagesPage.qml</file>
+        <file>Clickable.qml</file>
+        <file>TagPanel.qml</file>
+        <file>TagListItem.qml</file>
+        <file>ReferatsPage.qml</file>
+        <file>ReferatItem.qml</file>
+        <file>QuestionDialog.qml</file>
+        <file>DButton.qml</file>
+        <file>UpButton.qml</file>
+        <file>Options.qml</file>
+        <file>CuratorsDesk.qml</file>
+        <file>listViewer.qml</file>
+        <file>UserList.qml</file>
+        <file>AdminPanel.qml</file>
+        <file>TagsPanel.qml</file>
+        <file>ComboboxDialog.qml</file>
+    </qresource>
+</RCC>
