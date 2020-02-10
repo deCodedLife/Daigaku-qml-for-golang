@@ -5,22 +5,21 @@ using namespace std;
 
 AppCore::AppCore( QObject *parent ) : QObject (parent) {    // loading
     int connection = checkConnection();
+    qDebug() << "INIT suka";
     if ( !QDir("data").exists() ) QDir().mkdir("data");
     database.setDatabaseName("data/database.bin");
     if ( !database.open() ) { qDebug() << database.lastError().text();  return; }
-    else {
-        if ( !database.tables().contains( QLatin1String("user_data") ) ) {    // if data base not correct
-            QSqlQuery query;
-            query.exec("CREATE TABLE user_data ( username  TEXT NOT NULL, password TEXT NOT NULL, status TEXT NOT NULL, fgroup TEXT NOT NULL, is_curator INTEGER NOT NULL, profile TEXT NOT NULL);"); // creating user_data table
-            query.exec("CREATE TABLE images ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, tag TEXT NOT NULL, date TEXT NOT NULL, path TEXT NOT NULL);");  // creating images table
-            query.exec("CREATE TABLE messages ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, pick INTEGER NOT NULL, message TEXT NOT NULL, operator TEXT NOT NULL, date TEXT NOT NULL);");  // creating messages table
-            query.exec("CREATE TABLE tags ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, tag TEXT NOT NULL, static INTEGER NOT NULL);");   // cteating tags table
-            query.exec("CREATE TABLE config ( first INTEGER NOT NULL, theme INTEGER NOT NULL, trafic INTEGET NOT NULL);");   // creating config table
-            query.exec("CREATE TABLE Tasks ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, tag TEXT NOT NULL, task TEXT NOT NULL, attached TEXT NOT NULL, date_to TEXT NOT NULL, operator TEXT NOT NULL, finished INTEGER NOT NULL);");
-            query.exec("INSERT INTO user_data (`username`,`password`,`status`,`fgroup`,`is_curator`,`profile`) VALUES (\"\",\"\",\"\",\"\",1,\"\")");  // creating start values
-            query.exec("INSERT INTO config (`first`, `theme`, `trafic`) VALUES (1,0,0)");   // set default values
-            query.clear();
-        }
+    if ( !database.tables().contains( QLatin1String("user_data") ) ) {    // if data base not correct
+        QSqlQuery query;
+        query.exec("CREATE TABLE user_data ( username  TEXT NOT NULL, password TEXT NOT NULL, status TEXT NOT NULL, fgroup TEXT NOT NULL, is_curator INTEGER NOT NULL, profile TEXT NOT NULL);"); // creating user_data table
+        query.exec("CREATE TABLE images ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, tag TEXT NOT NULL, date TEXT NOT NULL, path TEXT NOT NULL);");  // creating images table
+        query.exec("CREATE TABLE messages ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, pick INTEGER NOT NULL, message TEXT NOT NULL, operator TEXT NOT NULL, date TEXT NOT NULL);");  // creating messages table
+        query.exec("CREATE TABLE tags ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, tag TEXT NOT NULL, static INTEGER NOT NULL);");   // cteating tags table
+        query.exec("CREATE TABLE config ( first INTEGER NOT NULL, theme INTEGER NOT NULL, trafic INTEGET NOT NULL);");   // creating config table
+        query.exec("CREATE TABLE Tasks ( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, groups TEXT NOT NULL, tag TEXT NOT NULL, task TEXT NOT NULL, attached TEXT NOT NULL, date_to TEXT NOT NULL, operator TEXT NOT NULL, finished INTEGER NOT NULL);");
+        query.exec("INSERT INTO user_data (`username`,`password`,`status`,`fgroup`,`is_curator`,`profile`) VALUES (\"\",\"\",\"\",\"\",1,\"\")");  // creating start values
+        query.exec("INSERT INTO config (`first`, `theme`, `trafic`) VALUES (1,0,0)");   // set default values
+        query.clear();
     }
     QJsonObject userdata = loadUserData();
     if ( connection == 0 && userdata["username"].toString() != "" )
@@ -29,15 +28,20 @@ AppCore::AppCore( QObject *parent ) : QObject (parent) {    // loading
 
 QString AppCore::post (QString url, QJsonObject json) {    // GET func
     qDebug() << api + url;
+    QNetworkAccessManager *netManager = new QNetworkAccessManager();
+    QNetworkRequest *netRequest = new QNetworkRequest();
+    QNetworkReply *netReply;
+    QEventLoop *loop = new QEventLoop();
+
     QJsonDocument jsonDoc (json);
     QByteArray jsonData = jsonDoc.toJson();
-    netRequest.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
-    netRequest.setHeader(QNetworkRequest::ContentLengthHeader,QByteArray::number(jsonData.size()));
-    if ( checkable == 1 )  netRequest.setUrl( QUrl( url ) );// set url
-    else netRequest.setUrl( QUrl( api + url ) );// set url
-    netReply = netManager->post( netRequest, jsonData );    // download page with GET method
-    netManager->connect( netManager, SIGNAL( finished( QNetworkReply* ) ), &loop, SLOT(quit())); // When page downloaded, programm will exit from loop
-    loop.exec();    // starting download page
+    netRequest->setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+    netRequest->setHeader(QNetworkRequest::ContentLengthHeader,QByteArray::number(jsonData.size()));
+    if ( checkable == 1 )  netRequest->setUrl( QUrl( url ) );// set url
+    else netRequest->setUrl( QUrl( api + url ) );// set url
+    netReply = netManager->post( *netRequest, jsonData );    // download page with GET method
+    netManager->connect( netManager, SIGNAL( finished( QNetworkReply* ) ), loop, SLOT(quit())); // When page downloaded, programm will exit from loop
+    loop->exec();    // starting download page
     if ( checkable == 1 ) userIco = netReply->readAll();
     QString result = netReply->readAll(); // getting text from page
     QList<RawHeaderPair> pairs = netReply->rawHeaderPairs();
@@ -50,7 +54,6 @@ QString AppCore::post (QString url, QJsonObject json) {    // GET func
 void AppCore::update ( QString username, QString password ) {
     token = getToken( username, password );
     if ( token.length() > 50 ) {
-        QString url;
         if ( !database.open() ) qDebug() << "upload func: [ERROR] > " + database.lastError().text();
         else {
             QSqlQuery query;
@@ -329,7 +332,33 @@ void AppCore::updateUser() {
         query.exec("UPDATE user_data SET `username` = \""+user_base["username"].toString()+"\", `password` = \""+user_base["password"].toString()+"\", `status` = \""+user_data["status"].toString()+"\", `fgroup` = \""+user_data["group"].toString()+"\",`is_curator` = \""+QString::number(user_data["is_curator"].toInt())+"\" , `profile` = \""+user_data["profile"].toString()+"\" "); // updating user data table
     }
 }
-QString AppCore::sendImage ( QString files, QString data ) {    // send image to server
+void AppCore::saveFile(QString path, QString url) {
+    qDebug() << path << url;
+    QFile file(path);
+    QNetworkAccessManager *netManager = new QNetworkAccessManager();
+    QNetworkRequest netRequest;
+    QNetworkReply *netReply;
+    QEventLoop loop;
+    file.open( QIODevice::WriteOnly );
+    netRequest.setUrl( QUrl( url ) );// set url
+    netReply = netManager->get( netRequest );    // download page with GET method
+    netManager->connect( netManager, SIGNAL( finished( QNetworkReply* ) ), &loop, SLOT( quit() ) ); // When page downloaded, programm will exit from loop
+    loop.exec();    // starting download page
+    QByteArray data = netReply->readAll();
+    file.write( data );
+    file.close();
+}
+QString AppCore::sendImage ( QString files, QString data, QStringList args ) {    // send image to server
+
+    if ( args.length() != 0 ) {
+        QString temp;
+        for ( int i = 0; i < args.length(); i++ ) {
+            temp = temp + "/" + getHashed( args.at(i) );
+        }
+        data = data + temp;
+
+    }
+
     QString filepath = files;
     QString filename = QFileInfo(filepath).fileName();
 
@@ -344,8 +373,8 @@ QString AppCore::sendImage ( QString files, QString data ) {    // send image to
 
     newNetManager->connect(newNetManager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
     loop.exec();
-
-    return newNetReply->readAll();
+    QString newStr = newNetReply->readAll();
+    return newStr;
 }
 QString AppCore::getCuratorTag(QString tag) {
     jsonObj = new( QJsonObject );
@@ -362,7 +391,7 @@ int AppCore::checkConnection () {    // checking for internet connection
     netRequest.setUrl( QUrl(api) );
     netReply = netManager->get( netRequest );
     netManager->connect( netManager, SIGNAL( finished( QNetworkReply* ) ), loop, SLOT( quit() ) );
-    netManager->connect( netManager, SIGNAL( error( QNetworkReply::NetworkError ) ), loop, SLOT( quit() ) );
+    //netManager->connect( netManager, SIGNAL( error( QNetworkReply::NetworkError ) ), loop, SLOT( quit() ) );
     loop->exec();
     qDebug() << "SOME...";
     if ( netReply->bytesAvailable() || netReply->readAll() != "" ) return 0;  // if get no data then return error
@@ -425,10 +454,11 @@ QString AppCore::sendTask(QString group, QString tagName, QString task, QString 
     jsonObj->insert("token", token);
     return post("/add-task", *jsonObj);
 }
-QString AppCore::deleteTag (QString group, QString tag ) {   // delete tag
+QString AppCore::deleteTag (QString group, QString tag, QString curator ) {   // delete tag
     jsonObj = new( QJsonObject );
     jsonObj->insert("tag", tag);
     jsonObj->insert("group", group);
+    jsonObj->insert("curator", curator);
     jsonObj->insert("token", token);
     return post("/delete-tag", *jsonObj);
 }
@@ -522,8 +552,10 @@ QJsonObject AppCore::getCurator() {
     jsonObj->insert("token", token);
     return QJsonDocument::fromJson( post("/get-curator", *jsonObj).toUtf8() ).object();
 }
-QJsonObject AppCore::igetGroups() {
-    return QJsonDocument::fromJson( post("/get-groups", *new(QJsonObject)).toUtf8() ).object();
+QJsonObject AppCore::igetGroups( QString curator ) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("curator", curator);
+    return QJsonDocument::fromJson( post("/get-groups", *jsonObj).toUtf8() ).object();
 }
 QJsonObject AppCore::igetTags( int all, QString group ) {
     jsonObj = new( QJsonObject );
@@ -564,16 +596,17 @@ QJsonObject AppCore::getUsers( int s, QString group ) {
         jsonObj->insert("group", group);
     else
         jsonObj->insert("group", "0");
-    if ( checkConnection() == 0 ) {
-        if ( s == 1 )
-            jsonObj->insert("type", "s");
-        else if ( s == 2 )
-            jsonObj->insert("type", "c");
-        else if ( s == 3 )
-            jsonObj->insert("type", "a");
-        object = object = QJsonDocument::fromJson( post("/get-users", *jsonObj ).toUtf8() ).object();
-        object["debug"] = 0;
+    if ( s == 1 )
+        jsonObj->insert("type", "s");
+    else if ( s == 2 )
+        jsonObj->insert("type", "c");
+    else if ( s == 3 )
+        jsonObj->insert("type", "a");
+    else {
+        jsonObj->insert("type", "s");
     }
+    object = object = QJsonDocument::fromJson( post("/get-users", *jsonObj ).toUtf8() ).object();
+    object["debug"] = 0;
     return object;
 }
 QJsonObject AppCore::getUser(QString username) {
@@ -581,6 +614,128 @@ QJsonObject AppCore::getUser(QString username) {
     jsonObj->insert("currentUser", username);
     jsonObj->insert("token", token);
     return QJsonDocument::fromJson( post("/get-currentUser", *jsonObj).toUtf8() ).object();
+}
+QJsonObject AppCore::getDocs(int id, int self) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id) );
+    jsonObj->insert("self", QString::number(self) );
+    jsonObj->insert("token", token);
+    return QJsonDocument::fromJson( post("/get-docs", *jsonObj).toUtf8() ).object();
+}
+
+QJsonObject AppCore::getTest(int self, QString group) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("self", QString::number(self));
+    jsonObj->insert("group", group);
+    jsonObj->insert("token", token);
+    return QJsonDocument::fromJson( post("/get-tests", *jsonObj).toUtf8() ).object();
+}
+QJsonObject AppCore::getHome(int self, QString group) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("self", QString::number(self));
+    jsonObj->insert("group", group);
+    jsonObj->insert("token", token);
+    return QJsonDocument::fromJson( post("/get-homeTask", *jsonObj).toUtf8() ).object();
+}
+QJsonObject AppCore::getTaskData(int all, int id) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("all", QString::number(all));
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("token", token);
+    return QJsonDocument::fromJson( post("/get-testsData", *jsonObj).toUtf8() ).object();
+}
+QJsonObject AppCore::getHomeData(int all, int id) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("all", QString::number(all));
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("token", token);
+    return QJsonDocument::fromJson( post("/get-homeData", *jsonObj).toUtf8() ).object();
+}
+QString AppCore::deleteTask(int id) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("token", token);
+    return post("/delete-tests", *jsonObj);
+}
+QString AppCore::deleteHome(int id) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("token", token);
+    return post("/delete-homeTask", *jsonObj);
+}
+QString AppCore::applyHome(int id, QString mark, QString user, int type) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("mark", mark);
+    jsonObj->insert("user", user);
+    jsonObj->insert("type", QString::number(type));
+    jsonObj->insert("token", token);
+    return post("/apply-homeData", *jsonObj);
+}
+QString AppCore::applyTest(int id, QString mark, QString user, int type) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("mark", mark);
+    jsonObj->insert("user", user);
+    jsonObj->insert("type", QString::number(type));
+    jsonObj->insert("token", token);
+    return post("/apply-testsData", *jsonObj);
+}
+QString AppCore::updateTest(int id, QString task, QString docs, QString description) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("task", task);
+    jsonObj->insert("docs", docs);
+    jsonObj->insert("description", description);
+    jsonObj->insert("token", token);
+    jsonObj->insert("groups", "0");
+    return post("/update-test", *jsonObj);
+}
+QString AppCore::updateHome(int id, QString task, QString docs, QString description) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("task", task);
+    jsonObj->insert("docs", docs);
+    jsonObj->insert("description", description);
+    jsonObj->insert("token", token);
+    jsonObj->insert("groups", "0");
+    return post("/update-homeTask", *jsonObj);
+}
+QString AppCore::addTest(QString group, QString tag, QString task, QString docs, QString groups, QString description ) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("tag", tag);
+    jsonObj->insert("docs", docs);
+    jsonObj->insert("task", task);
+    jsonObj->insert("group", group);
+    jsonObj->insert("token", token);
+    jsonObj->insert("groups", groups);
+    jsonObj->insert("description", description);
+    return post("/add-tests", *jsonObj);
+}
+QString AppCore::addHome(QString group, QString tag, QString task, QString docs, QString groups, QString description ) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("tag", tag);
+    jsonObj->insert("docs", docs);
+    jsonObj->insert("task", task);
+    jsonObj->insert("group", group);
+    jsonObj->insert("token", token);
+    jsonObj->insert("groups", groups);
+    jsonObj->insert("description", description);
+    return post("/add-homeTask", *jsonObj);
+}
+
+QString AppCore::deleteDoc(int id) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("token", token);
+    return post("/delete-docs", *jsonObj );
+}
+QString AppCore::changeDocPerm(int id, int perm) {
+    jsonObj = new( QJsonObject );
+    jsonObj->insert("id", QString::number(id));
+    jsonObj->insert("permission", QString::number(perm));
+    jsonObj->insert("token", token);
+    return post("/change-permission", *jsonObj);
 }
 QJsonObject AppCore::profileImage(QString url) {
     QJsonObject obj;
