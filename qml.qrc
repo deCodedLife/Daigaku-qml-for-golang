@@ -25,5 +25,11 @@
         <file>AdminPanel.qml</file>
         <file>TagsPanel.qml</file>
         <file>ComboboxDialog.qml</file>
+        <file>Docs.qml</file>
+        <file>DocItem.qml</file>
+        <file>TaskForm.qml</file>
+        <file>TasksList.qml</file>
+        <file>AddTest.qml</file>
+        <file>TagsCurator.qml</file>
     </qresource>
 </RCC>
