@@ -39,5 +39,9 @@
         <file>images/users.svg</file>
         <file>images/left.svg</file>
         <file>images/right.svg</file>
+        <file>images/files.svg</file>
+        <file>images/file.svg</file>
+        <file>images/tests.svg</file>
+        <file>images/homeTasks.svg</file>
     </qresource>
 </RCC>
