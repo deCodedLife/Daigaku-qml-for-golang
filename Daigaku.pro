@@ -1,4 +1,4 @@
-QT += quick sql network svg
+QT += quick sql network svg widgets
 CONFIG += c++11
 
 RC_ICONS += images/logo.ico
@@ -18,8 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         sources/app.cpp \
         main.cpp \
-        sources/appcore.cpp \
-        sources/ufile.cpp
+        sources/appcore.cpp
 
 RESOURCES += qml.qrc \
     source.qrc
@@ -37,7 +36,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     sources/app.h \
-    sources/appcore.h \
-    sources/ufile.h
+    sources/appcore.h
 
 DISTFILES +=
