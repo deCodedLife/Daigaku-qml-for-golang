@@ -4,7 +4,6 @@ import QtQuick.Controls 2.5
 import QtQuick.Controls.Material 2.3
 import QtQuick.Dialogs 1.2
 import QtGraphicalEffects 1.0
-import "qrc:/sources/core.js" as JsLib
 import AppCore 1.0
 
 ApplicationWindow {
