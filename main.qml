@@ -1,4 +1,4 @@
-import QtQuick 2.9
+import QtQuick 2.0
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.5
 import QtQuick.Controls.Material 2.3
@@ -11,6 +11,7 @@ ApplicationWindow {
 
     property var offline: 0
     property bool loaded: false
+    property var userData: core.loadUserData()
 
     property var pos: [ Screen.width / 2 - 320, Screen.height / 2 - 240 ]
     property var normal: [640, 480]
@@ -19,14 +20,14 @@ ApplicationWindow {
     Material.theme: Material.Dark
     Material.accent: "#009687"
     visible: true
-    width: 750
-    height: 500
+    width: 1200
+    height: 700
     title: qsTr("大学")
     flags: Qt.Window | Qt.CustomizeWindowHint | Qt.NoDropShadowWindowHint
     font.capitalization: Font.MixedCase
 
-    minimumHeight: 500
-    minimumWidth: 720
+    minimumHeight: 700
+    minimumWidth: 1200
 
     function maximize() {
         root.width = maximized[0]
@@ -188,6 +189,7 @@ ApplicationWindow {
     Timer {
         id: changeLoadScreen
         property int state: 0 // can be only 0 or 1
+        property bool visible: loadScreen.visible
         interval: 0
         onTriggered: {
             if ( state == 0 ) loadScreen.visible = true
@@ -267,8 +269,6 @@ ApplicationWindow {
 
     Component.onCompleted:  {
         loader.sourceComponent = loaderPage
-        console.log("WTF?")
-        let userData = core.loadUserData()
         if ( userData["username"] != "" ) {
             loadMainWindow.username = userData["username"]
             loadMainWindow.password = userData["password"]
