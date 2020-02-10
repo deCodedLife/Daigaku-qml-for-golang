@@ -13,17 +13,24 @@ Item {
                     {"image" : "qrc:/images/users.svg",     "text" : "Студенты"},
                     {"image" : "qrc:/images/timetable.svg", "text" : "Предметы"},
                     //{"image" : "qrc:/images/admin.svg",   "text" : "Панель управления"},
+                    {"image":"qrc:/images/files.svg","text":"Файлы"},
                     {"image" : "qrc:/images/options.svg",   "text" : "Настройки"}],
         "curator" : [
                     //{"image":"qrc:/images/edit.svg","text":"Таблицы"},        // TODO
-                    //{"image":"qrc:/images/stickers.svg","text":"Заметки"},    // TODO
-                    {"image":"qrc:/images/subject.svg","text":"Предмет"},
-                    {"image":"qrc:/images/options.svg","text":"Настройки"}],
+                    {"image":"qrc:/images/subject.svg",  "text":"Предмет"},
+                    {"image":"qrc:/images/homeTasks.svg","text":"Дом. работа"},
+                    {"image":"qrc:/images/tests.svg",    "text":"Контрольные"},
+                    {"image":"qrc:/images/files.svg",    "text":"Файлы"},
+                    {"image" : "qrc:/images/users.svg",  "text" : "Студенты"},
+                    {"image" : "qrc:/images/timetable.svg", "text" : "Предметы"},
+                    {"image":"qrc:/images/options.svg",  "text":"Настройки"}],
         "student" : [
                     {"image":"qrc:/images/timetable.svg","text":"Расписание"},
-                    {"image":"qrc:/images/work.svg", "text" : "Задания"},
-                    {"image":"qrc:/images/messages.svg","text":"Cообщения"},
-                    {"image":"qrc:/images/options.svg","text":"Настройки"}]
+                    {"image":"qrc:/images/homeTasks.svg","text":"Домашка"},
+                    {"image":"qrc:/images/tests.svg",    "text":"Контрольные"},
+                    {"image":"qrc:/images/work.svg",     "text" : "Задания"},
+                    {"image":"qrc:/images/messages.svg", "text":"Cообщения"},
+                    {"image":"qrc:/images/options.svg",  "text":"Настройки"}]
     }
     property bool entered: false
     property var config: core.getConfig()
@@ -31,7 +38,7 @@ Item {
     property var messages: root.messages
     property var comboBox: root.comboBox
     property var exitFunc: root.exitFunc
-    property var loadScr: root.loadScr
+    property var loadScr: root.loadScr    
 
     Rectangle { anchors.fill: parent; color: "#18191D" }
 
@@ -90,6 +97,8 @@ Item {
             width: parent.width
             height: parent.height
 
+            property bool isTasks: false
+
             NumberAnimation on width {
                 id: resizeStack
                 to: root.width - 36
@@ -112,6 +121,9 @@ Item {
         Component { id: adminPanel; AdminPanel   { coreFunc: core; messages: root.messages   } }
         Component { id: userList;   UserList     { coreFunc: core; messages: root.messages; comboBox: root.comboBox } }
         Component { id: tagsPanel;  TagsPanel    { coreFunc: core; messages: root.messages } }
+        Component { id: docsPanel;  Docs         { coreFunc: core; messages: root.messages; comboBox: root.comboBox; cloadSrc: root.loadScr; } }
+        Component { id: tasksList;  TasksList    { coreFunc: core; messages: root.messages; comboBox: root.comboBox; isTasks: pages.isTasks; cloadSrc: root.loadScr; } }
+        Component { id: tagsCurator; TagsCurator { coreFunc: core; messages: root.messages; comboBox: root.comboBox; } }
 
         Timer {
             id: getImage
@@ -152,7 +164,7 @@ Item {
             toggleBackground.running = true
         }
     }
-
+    /*
     Timer {
         repeat: true
         interval: 15000
@@ -162,6 +174,7 @@ Item {
                 core.update( root.userData["username"], root.userData["password"] )
         }
     }
+    */
 
     Rectangle {
         id: leftPanel
@@ -184,21 +197,41 @@ Item {
                     if ( userData["status"] == "student" || userData["status"] == "updater" ) {
                         switch( index ) {
                             case 0: pages.push( timeTable );break
-                            case 1: pages.push( referats ); break
-                            case 2: pages.push( messages ); break
-                            case 3: pages.push( options );  break
+                            case 1:
+                                pages.isTasks = false
+                                pages.push( tasksList )
+                                break
+                            case 2:
+                                pages.isTasks = true
+                                pages.push( tasksList )
+                                break
+                            case 3: pages.push( referats ); break
+                            case 4: pages.push( messages ); break
+                            case 5: pages.push( options );  break
                         }
                     } else if ( userData["status"] == "curator" ) {
                         switch( index ) {
-                            case 0: pages.push( curator );  break
-                            case 1: pages.push( options );  break
+                            case 0: pages.push( curator );   break
+                            case 1:
+                                pages.isTasks = false
+                                pages.push( tasksList )
+                                break
+                            case 2:
+                                pages.isTasks = true
+                                pages.push( tasksList )
+                                break
+                            case 3: pages.push( docsPanel ); break
+                            case 4: pages.push( userList );  break
+                            case 5: pages.push( tagsCurator ); break
+                            case 6: pages.push( options );   break
                         }
                     } else if ( userData["status"] == "admin" ) {
                         switch( index ) {
                             //case 0: pages.push( adminPanel ); break
                             case 0: pages.push( userList ); break
-                            case 1: pages.push( tagsPanel );  break
-                            case 2: pages.push( options );  break
+                            case 1: pages.push( tagsPanel );break
+                            case 2: pages.push( docsPanel );break
+                            case 3: pages.push( options );  break
                         }
                     }
 
