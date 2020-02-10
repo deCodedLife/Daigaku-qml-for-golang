@@ -13,6 +13,7 @@ Item {
 
     property string title: ""
     property string selectedGroup: ""
+    property int selectedIndex: 0
     property var model: []
 
     signal okClicked()
@@ -110,6 +111,7 @@ Item {
                 background: "#18191D"
                 accent: "#009687"
                 onClicked: {
+                    root.selectedIndex = combobox.currentIndex
                     root.selectedGroup = combobox.currentText
                     showAnimation.running = true
                     okClicked()
