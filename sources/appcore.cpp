@@ -45,9 +45,16 @@ QString AppCore::post (QString url, QJsonObject json) {    // GET func
     if ( checkable == 1 ) userIco = netReply->readAll();
     QString result = netReply->readAll(); // getting text from page
     QList<RawHeaderPair> pairs = netReply->rawHeaderPairs();
-    if ( pairs[1].second == "application/text" ) {
+    bool shit = true;
+    if ( pairs[0].second == "application/text" ) {
         QStringList array = result.split("\"");
         result = array[1];
+        shit = false;
+    }
+    if ( pairs[1].second == "application/text" && shit ) {
+        QStringList array = result.split("\"");
+        result = array[1];
+        shit = false;
     }
     return result;  // returning text from page
 }
