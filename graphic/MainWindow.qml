@@ -307,7 +307,7 @@ Item {
     }
 
     Component.onCompleted: {
-        console.log(userData)
+        console.log( JSON.stringify(userData) )
         function getMeta( status, i ) {
             return {
                 "image" : optionsPage[status][i]["image"],

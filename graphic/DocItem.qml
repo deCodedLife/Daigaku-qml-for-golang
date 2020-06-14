@@ -6,10 +6,6 @@ Item {
     width: root.width
     height: 42
 
-    property string image: root.image
-    property string operator: operator
-    property bool remove: false
-    property string text: ""
     property int indexNum: index
     property bool updater: false
     property var model: []
@@ -27,22 +23,19 @@ Item {
             width: 48
             asynchronous: true
             height: 48
-            source: image
+            source: "qrc:/images/file.svg"
             sourceSize: Qt.size( 64, 64 )
             y: parent.height / 2 - img.height / 2
             anchors.left: parent.left
             anchors.leftMargin: 5
-            layer.enabled: true
-            layer.effect: OpacityMask { maskSource: mask }
-        }
 
-        Rectangle {
-            id: mask
-            width: 48
-            height: 48
-            radius: 5
-            visible: false
-            antialiasing: true
+            ColorOverlay {
+                anchors.fill: img
+                source: img
+                color: "#808080"
+                antialiasing: true
+                visible: true
+            }
         }
 
         Text {
@@ -50,7 +43,7 @@ Item {
             font.pixelSize: 14
             x: 68
             y: parent.height / 4 - curator.contentHeight / 2
-            text: operator != "" ? operator : modelData["operator"]
+            text: modelData["date"]
             color: "white"
             renderType: Text.NativeRendering
             font.letterSpacing: 1.5
@@ -60,7 +53,7 @@ Item {
             id: txt
             width: updater ? parent.width - 32 - 68 : parent.width - 68
             height: img.height / 2 - txt.font.pointSize / 2
-            text: root.text == "" ? modelData["tag"] + ": " + modelData["task"] : root.text
+            text: modelData["name"]
             x: 68
             y: parent.height - parent.height / 2
             font.pixelSize: 16
@@ -73,7 +66,7 @@ Item {
 
         Image {
             id: svg
-            source: remove ? "qrc:/images/remove.svg" : "qrc:/images/more.svg"
+            source: "qrc:/images/more.svg"
             width: 32
             height: 32
             sourceSize: Qt.size( 64, 64 )
@@ -93,21 +86,17 @@ Item {
                         colorOverlay.color = "#808080"
                 }
                 onClicked: {
-                    if ( remove ) {
-                        root.func.running = true
-                    } else {
-                        if ( root.model.length != 0 ) {
-                            let component = Qt.createComponent("listViewer.qml")
-                            let meta = {
-                                "model" : root.model,
-                                "y"     : svg.y + (index * root.height ),
-                                "xpos"  : svg.x + svg.width,
-                                "func"  : func,
-                                "z"     : 1
-                            }
-                            component.createObject( root.parent, meta )
-                        } else root.func.running = true
-                    }
+                    if ( root.model.length != 0 ) {
+                        let component = Qt.createComponent("listViewer.qml")
+                        let meta = {
+                            "model" : root.model,
+                            "y"     : svg.y + (index * root.height ),
+                            "xpos"  : svg.x + svg.width,
+                            "func"  : func,
+                            "z"     : 1
+                        }
+                        component.createObject( root.parent, meta )
+                    } else root.func.running = true
                 }
             }
 

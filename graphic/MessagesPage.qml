@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtGraphicalEffects 1.0
-import "qrc:/sources/core.js" as JsLib
 import QtQuick.Controls 2.5
 import QtQuick.Controls.Material 2.3
 import QtQuick.Layouts 1.3
@@ -58,11 +57,8 @@ Item {
         Component.onCompleted: {
             extFunc.setTimeout( function() {
                 let gcurator = coreFunc.getCurator()
-                console.log( JSON.stringify( gcurator ) )
                 let userData = coreFunc.getUser( gcurator["operator"] )
-                console.log( JSON.stringify(userData) )
                 operatorIcon.source = userData["profile"]
-                console.log( userData["profile"] )
                 operatorText.text = userData["username"]
             }, 0)
         }

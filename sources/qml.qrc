@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../graphic/AddTest.qml</file>
+        <file>../graphic/AdminPanel.qml</file>
+        <file>../graphic/Clickable.qml</file>
+        <file>../graphic/ComboboxDialog.qml</file>
+        <file>../graphic/CuratorsDesk.qml</file>
+        <file>../graphic/DButton.qml</file>
+        <file>../graphic/ImageViewer.qml</file>
+        <file>../graphic/LeftPanelButtons.qml</file>
+        <file>../graphic/listViewer.qml</file>
+        <file>../graphic/LoginPage.qml</file>
+        <file>../graphic/main.qml</file>
+        <file>../graphic/MainWindow.qml</file>
+        <file>../graphic/MessagesDialog.qml</file>
+        <file>../graphic/MessagesPage.qml</file>
+        <file>../graphic/Options.qml</file>
+        <file>../graphic/QuestionDialog.qml</file>
+        <file>../graphic/ReferatItem.qml</file>
+        <file>../graphic/ReferatsPage.qml</file>
+        <file>../graphic/TableItem.qml</file>
+        <file>../graphic/TagListItem.qml</file>
+        <file>../graphic/TagPanel.qml</file>
+        <file>../graphic/TagsCurator.qml</file>
+        <file>../graphic/TagsPanel.qml</file>
+        <file>../graphic/TaskForm.qml</file>
+        <file>../graphic/TasksList.qml</file>
+        <file>../graphic/TimeTable.qml</file>
+        <file>../graphic/DocItem.qml</file>
+        <file>../graphic/Docs.qml</file>
+        <file>../graphic/UpButton.qml</file>
+        <file>../graphic/UserList.qml</file>
+    </qresource>
+</RCC>

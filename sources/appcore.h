@@ -92,7 +92,7 @@ private:
     QNetworkRequest netRequest;
     QNetworkReply *netReply;
     QEventLoop loop;
-    QString api = "http://coded.life:8080";
+    QString api = "";
 
     int checkable = 0;
     QByteArray userIco;

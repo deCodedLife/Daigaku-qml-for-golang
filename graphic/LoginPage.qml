@@ -122,7 +122,7 @@ Item {
                 running: false
             }
         }
-
+        /*
         ComboBox {
             id: names
             width: parent.width - 32
@@ -173,7 +173,6 @@ Item {
                             if ( names.name == "" ) {
                                 names.group = names.model[names.currentIndex]
                                 names.model = cores.getUsers( 1, names.model[names.currentIndex] )["users"]
-                                console.log( cores.getUsers( 1, names.model[names.currentIndex] )["users"] )
                             }
                         }
                         if ( names.name == "" && type == 0 && names.group != "" )   names.name = names.model[names.currentIndex]
@@ -183,6 +182,27 @@ Item {
                     names.currentIndex = -1
                 } else temp = 1
             }
+        }
+        */
+        TextField
+        {
+            id: logins
+            width: parent.width - 32
+            height: 42
+            x: parent.width
+            y: dashLine.y + dashLine.height / 5
+            Material.theme: Material.Dark
+            Material.accent: "#009687"
+
+            NumberAnimation on x {
+                id: comboBoxAnimation
+                to: 16
+                duration: 300
+                running: false
+                easing.type: Easing.OutInQuart
+            }
+
+            placeholderText: "Введите логин"
         }
 
         TextField {
@@ -194,7 +214,7 @@ Item {
             placeholderText: "Введите пароль"
             echoMode: TextField.Password
 
-            Keys.onReturnPressed: login ( names.currentText, password.text )
+            Keys.onReturnPressed: login ( logins.text, password.text ) //names.currentText
 
             NumberAnimation on x {
                 id: textFiledAnimation
@@ -236,7 +256,7 @@ Item {
             onStopped: {
                 if ( root.back == 0 ) dashLineAnimation.running = true
                 else {
-                    root.func.username = names.currentText
+                    root.func.username = logins.text //names.currentText
                     root.func.password = password.text
                     root.func.running = true
                 }

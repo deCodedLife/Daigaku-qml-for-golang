@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
-#include "sources/appcore.h"
+#include "appcore.h"
 #include <QDebug>
 
 int main(int argc, char *argv[])
@@ -13,10 +13,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     qputenv("QT_SCALE_FACTOR", QByteArray("3"));
 
-    app.setWindowIcon(QIcon("qrc:/images/logo.ico"));
+    app.setWindowIcon(QIcon("qrc:/graphic/images/logo.ico"));
     qmlRegisterType<AppCore>("AppCore", 1, 0, "AppCore");
 
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/graphic/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

@@ -81,7 +81,7 @@ ApplicationWindow {
             UpButton {
                 id: wind
                 image: "qrc:/images/windowed.svg"
-                subImage: "qrc:/images/maximize.svg"
+                subImage: "qrc:/graphic/graphic/images/maximize.svg"
                 windowMaximized: true
                 onClicked: {
                     if ( windowMaximized ) {

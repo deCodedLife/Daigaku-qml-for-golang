@@ -3,7 +3,6 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Controls 2.5
 import QtQuick.Controls.Material 2.3
 import QtGraphicalEffects 1.0
-import UFile 0.1
 
 Item {
     id: root
@@ -135,8 +134,9 @@ Item {
             height: parent.height - (100 + 10)
             y: 110
             model: [
-                //"Интерфейс",
-                "Выйти"]
+                "Сменить пароль",
+                "Интерфейс //coming soon",
+                "Выйти さよならですか"]
             clip: true
 
             delegate: Item {
@@ -150,6 +150,7 @@ Item {
                     width: 0
                     height: 0
                     color: "white"
+                    visible: index != 0
                     opacity: .2
 
                     transform: Translate {
@@ -179,7 +180,7 @@ Item {
                     text: modelData
                     font.pointSize: 16
                     smooth: true
-                    color: "white"
+                    color: index == 0 ? "lightgrey" : "white"
                     anchors.centerIn: parent
                     font.letterSpacing: 1.5
                 }
@@ -187,6 +188,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
+                    enabled: index != 0
                     onHoveredChanged: {
                         if ( containsMouse ) wh.visible = true
                         else wh.visible = false
@@ -207,9 +209,11 @@ Item {
                         circle.height = 0
                     }
                     onClicked: {
-                        if ( index == 0 ) {
+                        if ( index == 2 ) {
                             exitFunc.core = coreFunc
                             exitFunc.running = true
+                        } else if ( index == 0 ) {
+
                         }
                         circleAnimation.stop()
                     }

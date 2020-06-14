@@ -5,7 +5,6 @@ using namespace std;
 
 AppCore::AppCore( QObject *parent ) : QObject (parent) {    // loading
     int connection = checkConnection();
-    qDebug() << "INIT suka";
     if ( !QDir("data").exists() ) QDir().mkdir("data");
     database.setDatabaseName("data/database.bin");
     if ( !database.open() ) { qDebug() << database.lastError().text();  return; }

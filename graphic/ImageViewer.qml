@@ -7,7 +7,7 @@ import QtQuick.Controls.Material 2.3
 Window {
     id: root
     width: Screen.width
-    height:Screen.height - 1
+    height:Screen.height - 1 // if set Screen.height transperent background will be simple color gradient. I'ts Qt bug ;(
     visibility: "FullScreen"
     title: "Daigaku: image viewer"
     visible: true

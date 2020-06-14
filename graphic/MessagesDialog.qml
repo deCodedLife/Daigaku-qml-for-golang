@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.5
-import "qrc:/sources/core.js" as JsLib
 
 Item {
     id: root

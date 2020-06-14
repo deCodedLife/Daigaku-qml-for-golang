@@ -1,7 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.0
-import "qrc:/sources/core.js" as JsLib
 import QtGraphicalEffects 1.0
 
 Rectangle {
@@ -313,7 +312,6 @@ Rectangle {
     FileDialog {
         id: fileDialog
         title: "Выберете нужные изображение/я"
-        folder: shortcuts.Images
         visible: false
         nameFilters: [ "Image files (*.jpg *.png)" ]
         signal acceptFunc()
