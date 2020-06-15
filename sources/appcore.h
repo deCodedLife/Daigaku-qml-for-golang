@@ -92,7 +92,7 @@ private:
     QNetworkRequest netRequest;
     QNetworkReply *netReply;
     QEventLoop loop;
-    QString api = "";
+    QString api = "http://95.142.40.58:8080";
 
     int checkable = 0;
     QByteArray userIco;

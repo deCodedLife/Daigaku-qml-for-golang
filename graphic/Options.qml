@@ -81,7 +81,11 @@ Item {
 
                     onAccepted: {
                         cloadSrc.running = true // show load screen
-                        let file = fileUrls[0].slice( 8, fileUrls[0].length )
+                        let file;
+                        if (Qt.platform.os == "Windows")
+                            file = fileUrls[0].slice( 8, fileUrls[0].length )
+                        else
+                            file = fileUrls[0].slice( 7, fileUrls[0].length )
                         let ext = fileUrls[0].slice( fileUrls[0].length - 3, 3)
                         let data = coreFunc.sendImage( file, "/upload-ico" ) // send images * s - just for have
                         if ( data.length != 8 ) {

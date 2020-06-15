@@ -551,7 +551,11 @@ Item {
             let comment = commentText.text
             let _fileUrl = fileUrl.toString()
             cloadSrc.running = true // show load screen
-            let file = _fileUrl.slice( 8, _fileUrl.toString().length )
+            let file;
+            if (Qt.platform.os == "Windows")
+                file = _fileUrl.slice( 8, _fileUrl.toString().length )
+            else
+                file =_fileUrl.slice( 7, _fileUrl.toString().length )
             let extArray = file.split( "." )
             let ext = ""
             if ( extArray.length >= 2 )
